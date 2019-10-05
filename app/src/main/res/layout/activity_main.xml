@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <androidx.viewpager.widget.ViewPager
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="50dp"
+        android:text="Hello World!"
+        android:id="@+id/viewpager"/>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:layout_width="match_parent"
+        android:layout_marginTop="-50dp"
+        android:id="@+id/navigation"
+        android:layout_height="wrap_content"
+        app:menu="@menu/bottom_menu"
+        app:labelVisibilityMode="labeled"
+        android:layout_below="@id/viewpager"
+        />
+
+
+</RelativeLayout>
