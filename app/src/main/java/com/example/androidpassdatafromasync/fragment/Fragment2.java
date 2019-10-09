@@ -7,6 +7,9 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,14 +19,23 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.androidpassdatafromasync.R;
+import com.example.androidpassdatafromasync.adapter.ImageItemAdapter;
 import com.example.androidpassdatafromasync.interfaces.NetworkResponseListener;
+import com.example.androidpassdatafromasync.model.ImageModel;
 import com.example.androidpassdatafromasync.task.LoadDataTask;
+import com.example.androidpassdatafromasync.task.LoadDataWithImageTask;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class Fragment2 extends Fragment implements NetworkResponseListener {
 
 
-    private TextView textView;
+    private RecyclerView list_item;
     private ProgressBar progressBar;
 
     public Fragment2() {
@@ -40,17 +52,34 @@ public class Fragment2 extends Fragment implements NetworkResponseListener {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        textView=view.findViewById(R.id.text1);
+        list_item=view.findViewById(R.id.list_item);
         //Now Lets Show a Progressbar
         progressBar=view.findViewById(R.id.progress);
-        LoadDataTask loadDataTask=new LoadDataTask(Fragment2.this);
+        LoadDataWithImageTask loadDataTask=new LoadDataWithImageTask(Fragment2.this);
         loadDataTask.execute();
     }
 
     @Override
     public void SuccessData(String data) {
         progressBar.setVisibility(View.GONE);
-        textView.setText("Added From Fragment 2 : "+data);
+
+        try {
+            List<ImageModel> imageModels=new ArrayList<>();
+            JSONArray jsonArray = new JSONArray(data);
+            for (int i=0;i<jsonArray.length();i++){
+                imageModels.add(new ImageModel(jsonArray.getJSONObject(i).getString("author"),jsonArray.getJSONObject(i).getString("download_url")));
+            }
+
+            ImageItemAdapter imageItemAdapter=new ImageItemAdapter(getContext(),imageModels);
+            list_item.setLayoutManager(new GridLayoutManager(getContext(),2));
+            list_item.setAdapter(imageItemAdapter);
+        }
+        catch (JSONException e){
+            e.printStackTrace();
+        }
+
+
+
     }
 
     @Override
